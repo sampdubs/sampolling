@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create a SamPoll</title>
+</head>
+
+<body>
+    <h2>Enter you question and answer below</h2>
+    <h5>Unused answer boxes will not be counted</h5>
+    <form method="POST">
+        <p>Question: <input type="text" name="question" /></p>
+        <p>Answer 1: <input type="text" class="answers" name="answer1" /></p>
+        <input type="submit" value="submit">
+    </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    $(document).ready(() => {
+        function dec2more(dec) {
+            return ('0' + dec.toString(36)).substr(-2);
+        }
+
+        function generateId(len) {
+            const arr = new Uint8Array(len / 2);
+            window.crypto.getRandomValues(arr);
+            return Array.from(arr, dec2more).join('');
+        }
+
+        $("form").attr("action", `/poll/${generateId(8)}/results`);
+    });
+
+    function checkAndAdd() {
+        let lastInput = $(".answers").last();
+        let lastNum = Number($("form p").last().text().replace(/\D+/g, ""));
+        if (lastInput.val() != "") {
+            lastInput.after(
+                `<p>Answer ${lastNum + 1}: <input type="text" class="answers" name="answer${lastNum + 1}" /></p>`);
+        }
+    }
+    setInterval(checkAndAdd, 10);
+</script>
+
+</html>
