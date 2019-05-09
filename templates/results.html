@@ -9,11 +9,18 @@
 <body>
     <h2>Scan here to take the poll:</h2>
     <div id="qrcode"></div>
+    <h3>Question: {{poll['question']}}</h3>
+    <h4>Answers: </h4>
+    {% for choice in poll['choices'] %}
+        <p>{{choice}}: {{poll['answers'][choice]}} ({% if poll['responses'] > 0 %} {{round(100 * poll['answers'][choice] / poll['responses'], 3)}}% {% else %} 0% {% endif %})</p>
+    {% endfor %}
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script>
-    $('#qrcode').qrcode("this plugin is great");
+    let url = window.location.href;
+    url = url.substring(0, url.length - 8);
+    $('#qrcode').qrcode(url);
 </script>
 
 </html>
