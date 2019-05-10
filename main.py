@@ -29,15 +29,23 @@ def results(id):
                 if 'answer' in name:
                     if len(result[name]) > 0: 
                         poll['choices'].append(result[name])
-                        poll['answers'][result[name]]  = 0
+                        poll['answers'][result[name]] = 0
             polls[id] = poll
         else:
-            polls[id]['answers'][result['answer']] += 1.0
+            polls[id]['answers'][result['answer']] += 1
             polls[id]['responses'] += 1
     return render_template('results.html', poll=polls[id], round=round)
 
 @app.route("/poll/<id>/")
-def take(id):
+def take_redirect(id):
+    return redirect(request.path + "1/")
+
+@app.route("/poll/<id>/<qnumber>/", methods=['POST', 'GET'])
+def take(id, qnumber):
+    if  request.method == 'POST':
+        result = request.form
+        polls[id]['answers'][result['answer']] += 1
+        polls[id]['responses'] += 1
     return render_template("answer.html", poll=polls[id], id=id)
 
 if __name__ == "__main__":

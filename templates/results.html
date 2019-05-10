@@ -15,8 +15,8 @@
         <p>{{choice}}: {{poll['answers'][choice]}} ({% if poll['responses'] > 0 %} {{round(100 * poll['answers'][choice] / poll['responses'], 3)}}% {% else %} 0% {% endif %})</p>
     {% endfor %}
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="static/jquery.min.js"></script>
+<script src="static/jquery.qrcode.min.js"></script>
 <script>
     let url = window.location.href;
     url = url.substring(0, url.length - 8);
