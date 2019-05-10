@@ -1,4 +1,5 @@
 from flask import Flask, url_for, redirect, render_template, make_response, request
+import json, datetime
 app = Flask(__name__)
 
 polls = {}
@@ -57,7 +58,31 @@ def take(id, qnumber):
         polls[id][qnumber - 1]['responses'] += 1
         if qnumber >= len(polls[id]):
             return redirect(url_for('results', id=id))
-    return render_template("answer.html", poll=polls[id][qnumber], id=id)
+    cook = request.cookies.get('taken')
+    if cook != None:
+        cook = json.loads(cook)
+    else:
+        cook = {}
+    if id in cook:
+        taken = cook[id]
+    else:
+        taken = False
+        cook[id] = {}
+        for i in range(len(polls[id])):
+            cook[id][str(i + 1)] = False
+        cook[id][qnumber] = True
+        resp = make_response(render_template("answer.html", poll=polls[id][qnumber], id=id))
+        resp.set_cookie('taken', json.dumps(cook), expires=(datetime.datetime.now()+datetime.timedelta(days=10)))
+        return resp
+    if taken:
+        return 'You have already answered this question'
+    for i in range(len(polls[id])):
+        cook[id][str(i + 1)] = False
+    cook[id][qnumber] = True
+    resp = make_response(render_template("answer.html", poll=polls[id][qnumber], id=id))
+    resp.set_cookie('taken', json.dumps(cook), expires=(datetime.datetime.now()+datetime.timedelta(days=10)))
+    return resp
+    return resp
 
 if __name__ == "__main__":
     print("Starting server...")
