@@ -70,7 +70,7 @@ def take(id, qnumber):
         cook[id] = {}
         for i in range(len(polls[id])):
             cook[id][str(i + 1)] = False
-        cook[id][qnumber] = True
+        cook[id][qnumber] = False
         resp = make_response(render_template("answer.html", poll=polls[id][qnumber], id=id))
         resp.set_cookie('taken', json.dumps(cook), expires=(datetime.datetime.now()+datetime.timedelta(days=10)))
         return resp
