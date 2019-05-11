@@ -12,7 +12,7 @@
         {% for choice in poll['choices'] %}
             <input type="radio" value={{choice.replace(" ", "****SPACE****")}} name="answer"> {{choice}} <br>
         {% endfor %}
-        <input type="submit" value="submit">
+        <br><input type="submit" value="submit">
     </form>
 </body>
 <script src="../../../static/jquery.min.js"></script>
