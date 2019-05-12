@@ -13,7 +13,8 @@
         <p>Question: <input type="text" class="questions" name="question1" /></p>
         <p>Answer 1: <input type="text" class="answers1" name="answer1_1" /></p>
         <br><button type="button" id="addbtn">Add Question</button>
-        <br><br><input type="submit" value="submit">
+        <br><br><input id="submitbtn" type="submit" value="submit">
+        <span id="warnspan"></span>
     </form>
 </body>
 <script src="../../static/jquery.min.js"></script>
@@ -35,6 +36,26 @@
     function checkAndAdd() {
         $('.questions').each(function () {
             let qnum = Number($(this).attr('name').replace(/\D+/g, ""));
+            const answers = [];
+            let asAreGood = true;
+            $("#wordspan").text("");
+            $(".answers" + qnum).each(function () {
+                const val = $(this).val();
+                if (val.length > 0 && answers.includes(val)) {
+                    $('#submitbtn').attr('disabled', true);
+                    $("#wordspan").text(`Please enter unique answer choices. You used ${val} twice`);
+                    asAreGood = false;
+                }
+                if (val.includes("****SPACE****")) {
+                    $('#submitbtn').attr('disabled', true);
+                    $("#wordspan").text("Stop trying to hack me. Don't put ****SPACE**** as an answer choice.");
+                    asAreGood = false;
+                }
+                answers.push(val);
+            });
+            if (asAreGood) {
+                $('#submitbtn').attr('disabled', false);
+            }
             let lastInput = $(".answers" + qnum).last();
             let lastNum = Number($(".answers" + qnum).last().attr("name").replace(/^[^_]+/g, "").substr(1));
             if (lastInput.val() != "") {

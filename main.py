@@ -84,7 +84,7 @@ def take(id, qnumber):
         resp = make_response(render_template(
             "answer.html", poll=polls[id][qnumber], id=id))
         resp.set_cookie('taken', json.dumps(cook), expires=(
-            datetime.datetime.now()+datetime.timedelta(days=10)))
+            datetime.datetime.now() + datetime.timedelta(hours=1)))
         return resp
     if taken:
         return 'You have already answered this question'
@@ -92,7 +92,7 @@ def take(id, qnumber):
     resp = make_response(render_template(
         "answer.html", poll=polls[id][qnumber], id=id))
     resp.set_cookie('taken', json.dumps(cook), expires=(
-        datetime.datetime.now()+datetime.timedelta(days=10)))
+        datetime.datetime.now() + datetime.timedelta(hours=10)))
     return resp
 
 
