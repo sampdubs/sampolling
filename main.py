@@ -23,6 +23,8 @@ def index():
 
 @app.route("/poll/<id>/results/", methods=['POST', 'GET'])
 def results(id):
+    if id not in polls:
+        return "Sorry, that poll doesn't exit..."
     if request.method == 'POST':
         result = request.form
         if 'question1' in result:
@@ -59,6 +61,8 @@ def take_redirect(id):
 
 @app.route("/poll/<id>/<qnumber>/", methods=['POST', 'GET'])
 def take(id, qnumber):
+    if id not in polls:
+        return "Sorry, that poll doesn't exit..."
     qnumber = int(qnumber) - 2
     if request.method == 'POST':
         result = request.form
@@ -86,7 +90,7 @@ def take(id, qnumber):
             datetime.datetime.now() + datetime.timedelta(days=1)))
         return resp
     if taken:
-        return 'You have already answered this question'
+        return 'You have already answered this question, click <a href=../results>here</a> to go to the results page'
     cook[qnumber] = True
     resp = make_response(render_template(
         "answer.html", poll=polls[id][qnumber], id=id))
