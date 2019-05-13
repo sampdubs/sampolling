@@ -10,9 +10,9 @@
     <h2>{{poll['question']}}</h2>
     <form method="POST">
         {% for choice in poll['choices'] %}
-            <input type="radio" value={{choice.replace(" ", "****SPACE****")}} name="answer"> {{choice}} <br>
+        <input type="radio" value={{choice.replace(" ", "****SPACE****")}} name="answer" class="choice"> {{choice}} <br>
         {% endfor %}
-        <br><input type="submit" value="submit">
+        <br><input type="submit" value="submit" id="submit">
     </form>
 </body>
 <script src="../../../static/jquery.min.js"></script>
@@ -23,6 +23,18 @@
         qnum = Number(qnum.substring(0, qnum.length - 1));
         $('form').attr('action', `${url.substring(0, url.length - 2)}${qnum + 1}/`)
     });
+    function checkAs() {
+        let asAreGood = true;
+        $('.choice').each(function () {
+            if ($(this).val().length == 0) {
+                $("#submit").attr('disabled', true);
+                asAreGood = false;
+            }
+        })
+        if (asAreGood) {
+            $("#submit").attr('disabled', false);
+        }
+    }
 </script>
 
 </html>

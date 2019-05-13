@@ -68,31 +68,30 @@ def take(id, qnumber):
     qnumber += 1
     if qnumber >= len(polls[id]):
         return redirect(url_for('results', id=id))
-    cook = request.cookies.get('taken')
+    cook = request.cookies.get(id)
     if cook != None:
         cook = json.loads(cook)
     else:
-        cook = {}
-    if id in cook:
-        taken = cook[id][str(qnumber + 1)]
+        cook = []
+    if len(cook) > 0:
+        taken = cook[qnumber]
     else:
         taken = False
-        cook[id] = {}
         for i in range(len(polls[id])):
-            cook[id][str(i + 1)] = False
-        cook[id][str(qnumber + 1)] = True
+            cook.append(False)
+        cook[qnumber] = True
         resp = make_response(render_template(
             "answer.html", poll=polls[id][qnumber], id=id))
-        resp.set_cookie('taken', json.dumps(cook), expires=(
-            datetime.datetime.now() + datetime.timedelta(hours=1)))
+        resp.set_cookie(id, json.dumps(cook), expires=(
+            datetime.datetime.now() + datetime.timedelta(days=1)))
         return resp
     if taken:
         return 'You have already answered this question'
-    cook[id][str(qnumber + 1)] = True
+    cook[qnumber] = True
     resp = make_response(render_template(
         "answer.html", poll=polls[id][qnumber], id=id))
-    resp.set_cookie('taken', json.dumps(cook), expires=(
-        datetime.datetime.now() + datetime.timedelta(hours=10)))
+    resp.set_cookie(id, json.dumps(cook), expires=(
+        datetime.datetime.now() + datetime.timedelta(days=1)))
     return resp
 
 
