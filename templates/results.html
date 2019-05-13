@@ -9,11 +9,12 @@
 <body>
     <h2>Scan here to take the poll:</h2>
     <div id="qrcode"></div>
-    {% for p in poll %}
-        <h3>Question: {{p['question']}}</h3>
+    <p hidden="true" id="poll">{{poll}}</p>
+    {% for p in enumerate(poll) %}
+        <h3>Question: {{p[1]['question']}}</h3>
         <h4>Answers: </h4>
-        {% for choice in p['choices'] %}
-            <p>{{choice}}: {{p['answers'][choice]}} ({% if p['responses'] > 0 %} {{round(100 * p['answers'][choice] / p['responses'], 3)}}% {% else %} 0% {% endif %})</p>
+        {% for choice in enumerate(p[1]['choices']) %}
+            <br><p style="font-size: 1.25em; display: inline-block;">{{choice[1]}}: {{p[1]['answers'][choice[1]]}} </p> <div style="width:70%; height: 1.25em; display: inline-block;"><div style="background-color: blue; height: 100%; display: inline-block;" class="yes" id="yes{{p[0]}}_{{choice[0]}}"></div><div style="background-color: grey; height: 100%; width: 100%; display: inline-block;" class="no" id="no{{p[0]}}_{{choice[0]}}"></div></div> <p style="display: inline-block;">({% if p[1]['responses'] > 0 %} {{round(100 * p[1]['answers'][choice[1]] / p[1]['responses'], 3)}}% {% else %} 0%{% endif %})</p>
         {% endfor %}
     {% endfor %}
 </body>
@@ -23,6 +24,17 @@
     let url = window.location.href;
     url = url.substring(0, url.length - 8);
     $('#qrcode').qrcode(url);
+    const poll = JSON.parse($("#poll").text().replace(/'/g, '"'));
+    for (let i = 0; i < poll.length; i++) {
+        question = poll[i];
+        for (let j = 0; j < question['choices'].length; j++) {
+            const choice = question['choices'][j];
+            let percent = 100 * question['answers'][choice] / question['responses'];
+            $(`#no${i}_${j}`).css("width", `${100 - percent}%`);
+            $(`#yes${i}_${j}`).css("width", `${percent}%`);
+            console.log(`#no${i}_${j}`, `#yes${i}_${j}`, percent, question);
+        }
+    }
 </script>
 
 </html>

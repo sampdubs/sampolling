@@ -35,7 +35,7 @@ def results(id):
                     tpoll['question'] = result[f'question{i}']
                     tpoll['choices'] = []
                     tpoll['answers'] = {}
-                    tpoll['responses'] = 0.0
+                    tpoll['responses'] = 0
                     for name in result:
                         if f'answer{i}_' in name:
                             if len(result[name]) > 0:
@@ -48,8 +48,8 @@ def results(id):
         else:
             polls[id][0]['answers'][result['answer'].replace(
                 "****SPACE****", " ")] += 1
-            polls[id][0]['responses'] += 1.0
-    return render_template('results.html', poll=polls[id], round=round)
+            polls[id][0]['responses'] += 1
+    return render_template('results.html', poll=polls[id], round=round, enumerate=enumerate)
 
 
 @app.route("/poll/<id>/")
@@ -64,7 +64,7 @@ def take(id, qnumber):
         result = request.form
         polls[id][qnumber]['answers'][result['answer'].replace(
             "****SPACE****", " ")] += 1
-        polls[id][qnumber]['responses'] += 1.0
+        polls[id][qnumber]['responses'] += 1
     qnumber += 1
     if qnumber >= len(polls[id]):
         return redirect(url_for('results', id=id))
