@@ -6,8 +6,10 @@ app = Flask(__name__)
 polls = {}
 
 
-@app.route("/poll/create/")
+@app.route("/poll/create/", methods=['POST', 'GET'])
 def create():
+    if request.method == "POST":
+        return render_template(f"{request.form['type']}.html")
     return render_template("create.html")
 
 
@@ -24,7 +26,7 @@ def index():
 @app.route("/poll/<id>/results/", methods=['POST', 'GET'])
 def results(id):
     if id not in polls:
-        return "Sorry, that poll doesn't exit..."
+                return "Sorry, that poll doesn't exit..."
     if request.method == 'POST':
         result = request.form
         if 'question1' in result:
@@ -46,6 +48,24 @@ def results(id):
                     poll.append(tpoll)
                 else:
                     break
+            polls[id] = poll
+        elif "num" in result:
+            poll = []
+            achoices = []
+            for name in result:
+                if 'answer' in name:
+                    if len(result[name]) > 0:
+                        achoices.append(result[name])
+            for i in range(int(result["num"])):
+                tpoll = {}
+                tpoll['question'] = f"Question {i + 1}"
+                tpoll['choices'] = []
+                tpoll['answers'] = {}
+                tpoll['responses'] = 0
+                for choice in achoices:
+                    tpoll['choices'].append(choice)
+                    tpoll['answers'][choice] = 0
+                poll.append(tpoll)
             polls[id] = poll
         else:
             polls[id][0]['answers'][result['answer'].replace(

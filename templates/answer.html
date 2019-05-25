@@ -12,7 +12,7 @@
         {% for choice in poll['choices'] %}
         <input type="radio" value={{choice.replace(" ", "****SPACE****")}} name="answer" class="choice"> {{choice}} <br>
         {% endfor %}
-        <br><input type="submit" value="submit" id="submit">
+        <br><input type="submit" value="submit" id="submit" disabled="true">
     </form>
 </body>
 <script src="../../../static/jquery.min.js"></script>
@@ -21,21 +21,10 @@
         let url = window.location.pathname;
         let qnum = url.substr(15);
         qnum = Number(qnum.substring(0, qnum.length - 1));
-        $('form').attr('action', `${url.substring(0, url.length - 2)}${qnum + 1}/`)
+        let len = String(qnum).length + 1
+        $('form').attr('action', `${url.substring(0, url.length - len)}${qnum + 1}/`)
     });
-    function checkAs() {
-        let asAreGood = true;
-        $('.choice').each(function () {
-            if ($(this).val().length == 0) {
-                $("#submit").attr('disabled', true);
-                asAreGood = false;
-            }
-        })
-        if (asAreGood) {
-            $("#submit").attr('disabled', false);
-        }
-    }
-    setInterval(checkAs, 10)
+    $("input:radio").change(() => $("#submit").attr('disabled', false));
 </script>
 
 </html>
