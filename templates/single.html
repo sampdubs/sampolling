@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create a SamPoll</title>
+</head>
+
+<body>
+    <h2>Enter your question and answers below</h2>
+    <h5>Unused answer boxes will not be counted</h5>
+    <form method="POST">
+        <p>Question: <input type="text" class="questions" name="question1" /></p>
+        <p>Answer 1: <input type="text" class="answers1" name="answer1_1" /></p>
+        <input id="submitbtn" type="submit" value="submit">
+        <span id="wordspan"></span>
+    </form>
+</body>
+<script src="../../static/jquery.min.js"></script>
+<script>
+    $(document).ready(() => {
+        function dec2more(dec) {
+            return ('0' + dec.toString(36)).substr(-2);
+        }
+
+        function generateId(len) {
+            const arr = new Uint8Array(len / 2);
+            window.crypto.getRandomValues(arr);
+            return Array.from(arr, dec2more).join('');
+        }
+
+        $("form").attr("action", `/poll/${generateId(8)}/results/`);
+    });
+
+    function checkAndAdd() {
+        $('.questions').each(function () {
+            let qnum = Number($(this).attr('name').replace(/\D+/g, ""));
+            const answers = [];
+            let asAreGood = true;
+            $("#wordspan").text("");
+            $(".answers" + qnum).each(function () {
+                const val = $(this).val();
+                if (val.length > 0 && answers.includes(val)) {
+                    $('#submitbtn').attr('disabled', true);
+                    $("#wordspan").text(`Please enter unique answer choices. You used ${val} twice`);
+                    asAreGood = false;
+                }
+                if (val.includes("****SPACE****")) {
+                    $('#submitbtn').attr('disabled', true);
+                    $("#wordspan").text("Stop trying to hack me. Don't put ****SPACE**** as an answer choice.");
+                    asAreGood = false;
+                }
+                answers.push(val);
+            });
+            if (asAreGood) {
+                $('#submitbtn').attr('disabled', false);
+            }
+            let lastInput = $(".answers" + qnum).last();
+            let lastNum = Number($(".answers" + qnum).last().attr("name").replace(/^[^_]+/g, "").substr(1));
+            if (lastInput.val() != "") {
+                lastInput.after(
+                    `<p>Answer ${lastNum + 1}: <input type="text" class="answers${qnum}" name="answer${qnum}_${lastNum + 1}" /></p>`);
+            }
+        });
+    }
+    setInterval(checkAndAdd, 10);
+</script>
+
+</html>

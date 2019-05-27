@@ -7,11 +7,12 @@
 </head>
 
 <body>
-    <h2>Would you like to have many questions with the same answer choices or many unique question and answers?</h2>
+    <h2>Would you like to have just one question, many questions with the same answer choices (like a multiple choice quiz), or many unique question and answers?</h2>
     <form action="/poll/create/" method="POST">
+        <input type="radio" name="type" value="single"> One question <br>
         <input type="radio" name="type" value="uniform"> Uniform questions and answers <br>
-        <input type="radio" name="type" value="unique"> Unique questions and answers <br>
-        <input type="submit" value="submit" id="submit" disabled="true">
+        <input type="radio" name="type" value="unique"> Unique questions and answers <br><br>
+        <input type="submit" value="Go!" id="submit" disabled="true">
     </form>
 </body>
 <script src="../../static/jquery.min.js"></script>

@@ -25,8 +25,6 @@ def index():
 
 @app.route("/poll/<id>/results/", methods=['POST', 'GET'])
 def results(id):
-    if id not in polls:
-                return "Sorry, that poll doesn't exit..."
     if request.method == 'POST':
         result = request.form
         if 'question1' in result:
@@ -71,6 +69,8 @@ def results(id):
             polls[id][0]['answers'][result['answer'].replace(
                 "****SPACE****", " ")] += 1
             polls[id][0]['responses'] += 1
+    if id not in polls:
+                return "Sorry, that poll doesn't exit..."
     return render_template('results.html', poll=polls[id], round=round, enumerate=enumerate)
 
 
