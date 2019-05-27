@@ -54,7 +54,7 @@ def results(id):
                 if 'answer' in name:
                     if len(result[name]) > 0:
                         achoices.append(result[name])
-            for i in range(int(result["num"])):
+            for i in range(result["num"]):
                 tpoll = {}
                 tpoll['question'] = f"Question {i + 1}"
                 tpoll['choices'] = []
@@ -69,8 +69,9 @@ def results(id):
             polls[id][0]['answers'][result['answer'].replace(
                 "****SPACE****", " ")] += 1
             polls[id][0]['responses'] += 1
+        return f'Yay! you made a poll click <a href="{request.path}">here</a> to view the results'
     if id not in polls:
-                return "Sorry, that poll doesn't exit..."
+        return "Sorry, that poll doesn't exit..."
     return render_template('results.html', poll=polls[id], round=round, enumerate=enumerate)
 
 
@@ -83,6 +84,8 @@ def take_redirect(id):
 def take(id, qnumber):
     if id not in polls:
         return "Sorry, that poll doesn't exit..."
+    if not qnumber.isdigit():
+        qnumber  = "1"
     qnumber = int(qnumber) - 2
     if request.method == 'POST':
         result = request.form

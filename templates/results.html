@@ -24,7 +24,7 @@
             id="no{{p[0]}}_{{choice[0]}}"></div>
     </div>
     <p style="display: inline-block; width: 70px;">({% if p[1]['responses'] > 0 %}
-        {{round(100 * p[1]['answers'][choice[1]] / p[1]['responses'], 3)}}% {% else %} 0%{% endif %})</p>
+        {{round(100 * p[1]['answers'][choice[1]] / p[1]['responses'], 2)}}% {% else %} 0%{% endif %})</p>
     </span>
     </div>
     {% endfor %}
