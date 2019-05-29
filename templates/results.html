@@ -12,7 +12,7 @@
     <p hidden="true" id="poll">{{poll}}</p>
     {% for p in enumerate(poll) %}
     <h3>Question: {{p[1]['question']}}</h3>
-    <h4>Answers: </h4>
+    <!-- <h4>Answers: </h4>
     {% for choice in enumerate(p[1]['choices']) %}
     
     <div>
@@ -27,33 +27,37 @@
         {{round(100 * p[1]['answers'][choice[1]] / p[1]['responses'], 2)}}% {% else %} 0%{% endif %})</p>
     </span>
     </div>
+    {% endfor %} -->
+    <canvas id="chart_{{p[0]}}" class="chart"></canvas>
     {% endfor %}
-    {% endfor %}
-    <div id="sizeDiv" style="display: none; width: 70%;" />
 </body>
 <script src="../../../static/jquery.min.js"></script>
 <script src="../../../static/jquery.qrcode.min.js"></script>
+<script src="../../../static/Chart.min.js"></script>
 <script>
     let url = window.location.href;
     url = url.substring(0, url.length - 8);
     $('#qrcode').qrcode(url);
-    function setWidth () {
-        let width70 = $("#sizeDiv").width();
-        $(".barContainer").each(function () {
-            $(this).css('width', width70);
-        });
-    }
-    setWidth();
-    $(window).resize(setWidth);
     const poll = JSON.parse($("#poll").text().replace(/'/g, '"'));
     for (let i = 0; i < poll.length; i++) {
         question = poll[i];
-        for (let j = 0; j < question['choices'].length; j++) {
-            const choice = question['choices'][j];
-            let percent = 100 * question['answers'][choice] / question['responses'];
-            $(`#no${i}_${j}`).css("width", `${100 - percent}%`);
-            $(`#yes${i}_${j}`).css("width", `${percent}%`);
+        data = {
+            datasets: [{
+                data: [],
+                backgroundColor: []
+            }],
+            labels: []
+        };
+        for (let choice of question['choices']) {
+            data.labels.push(choice);
+            data.datasets[0].data.push(question.answers[choice]);
+            data.datasets[0].backgroundColor.push(`hsl(${Math.random() * 360}, 100%, 50%)`);
         }
+        const ctx = $(`#chart_${i}`);
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: data
+        });
     }
 </script>
 

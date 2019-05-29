@@ -54,7 +54,7 @@ def results(id):
                 if 'answer' in name:
                     if len(result[name]) > 0:
                         achoices.append(result[name])
-            for i in range(result["num"]):
+            for i in range(int(result["num"])):
                 tpoll = {}
                 tpoll['question'] = f"Question {i + 1}"
                 tpoll['choices'] = []
@@ -104,8 +104,7 @@ def take(id, qnumber):
         taken = cook[qnumber]
     else:
         taken = False
-        for i in range(len(polls[id])):
-            cook.append(False)
+        cook += [False] * len(polls[id])
         cook[qnumber] = True
         resp = make_response(render_template(
             "answer.html", poll=polls[id][qnumber], id=id))
