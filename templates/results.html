@@ -48,10 +48,13 @@
             }],
             labels: []
         };
+        let val = 0;
+        let del = 360 / question['choices'].length;
         for (let choice of question['choices']) {
             data.labels.push(choice);
             data.datasets[0].data.push(question.answers[choice]);
-            data.datasets[0].backgroundColor.push(`hsl(${Math.random() * 360}, 100%, 50%)`);
+            data.datasets[0].backgroundColor.push(`hsl(${val}, 100%, 50%)`);
+            val += del;
         }
         const ctx = $(`#chart_${i}`);
         const chart = new Chart(ctx, {
