@@ -122,5 +122,4 @@ def take(id, qnumber):
 
 
 if __name__ == "__main__":
-    print("Starting server...")
-    app.run(debug=True)
+    app.run(debug=False)
