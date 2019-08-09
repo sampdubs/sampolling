@@ -25,6 +25,7 @@ def index():
 
 @app.route("/poll/<id>/results/", methods=['POST', 'GET'])
 def results(id):
+    print(id)
     if request.method == 'POST':
         result = request.form
         if 'question1' in result:
